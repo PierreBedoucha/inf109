@@ -26,7 +26,7 @@ def checkHit(secretWord, secretList, s):
 def showScreen(secretList):
     height = 500
     width = 250
-    win = GraphWin("Hangman", width, height)
+    win = GraphWin("The Antman", width, height)
     middleOfWord = Point(width/2, height/2)
     word = Text(middleOfWord, secretList)
     word.draw(win)
@@ -137,7 +137,7 @@ def drawAntennas(win, width, height):
     ant1.draw(win)
     ant2.draw(win)
 
-def drawHangman(lives, win, width, height):
+def drawTheAntman(lives, win, width, height):
 
     if lives == 6:
         drawBottom(win, width, height)
@@ -155,22 +155,22 @@ def drawHangman(lives, win, width, height):
 def task1c():
     height = 500
     width = 250
-    win = GraphWin("Hangman", width, height)
+    win = GraphWin("The Antman", width, height)
     lives = 10
     while lives > 0:
         win.getKey()
-        drawHangman(lives, win, width, height)
+        drawTheAntman(lives, win, width, height)
         lives -= 1
     win.getMouse()
     win.close()
 
 def play(secretWord):
     secretList = makeCopy(secretWord)
-    lives = 10
+    lives = 6
     countHits = 0
     height = 500
     width = 250
-    win = GraphWin("Hangman", width, height)
+    win = GraphWin("The Antman", width, height)
     middleOfWord = Point(width/2, height*7/8)
     word = Text(middleOfWord, secretList)
     word.draw(win)
@@ -179,19 +179,35 @@ def play(secretWord):
                    'good':'Well done, guess again.',
                    'bad':'Not in word, guess again.',
                    'win':'You have guessed the word.',
-                   'lose':'You have not guessed the word.'}
+                   'lose':'You have not guessed the word.',
+                   'already':'You already tried this letter'}
     theText = Text(textPoint, displayText['start'])
     theText.draw(win)
+
+    letter_list = []
+    alreadyPoint = Point(width / 2, height / 10)
+    alreadyText = Text(alreadyPoint, 'Letters already tried: ')
+    alreadyText.draw(win)
 
     while lives > 0 and countHits < len(secretWord):
         letter = win.getKey()
         secretList, hit = checkHit(secretWord, secretList, letter)
-        if hit == 0:
+
+        if hit == 0 and not letter in letter_list:
+            letter_list.append(letter)
             theText.setText(displayText['bad'])
-            drawHangman(lives, win, width, height)
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+            drawTheAntman(lives, win, width, height)
+            lives = lives - 1
+        elif hit == 0 and letter in letter_list:
+            theText.setText(displayText['already'])
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+            drawTheAntman(lives, win, width, height)
             lives = lives - 1
         else:
+            letter_list.append(letter)
             theText.setText(displayText['good'])
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
             word.setText(secretList)
             countHits = countHits + hit
 
