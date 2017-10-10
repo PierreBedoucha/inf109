@@ -93,15 +93,6 @@ def drawVerticalTopNoose(win, width, height):
     noose = Line(endNoose, topMiddle)
     noose.draw(win)
 
-def drawNoose(win, width, height):
-    left = width/4
-    middle = width/2
-    top = height/4
-    topMiddle = Point(width/2, height/8)
-    endNoose = Point(width/2, height/4)
-    noose = Line(endNoose, topMiddle)
-    noose.draw(win)
-
 def drawHead(win, width, height):
     head = Circle(Point(width/2, height*5/16), height/16)
     head.draw(win)
@@ -136,34 +127,15 @@ def drawLegs(win, width, height):
 
 def drawAntennas(win, width, height):
     antenna11 = Point((width/2)-(height/32), height / 4)
-    antenna12 = Point((width / 2) - (2*height / 32), 6 * height / 32)
+    antenna12 = Point((width / 2) - (2*height / 32), (height / 4)-(height / 32))
 
-    antenna21 = Point((width/2)+(height/16), 4*height / 16)
-    antenna22 = Point((width / 2) + (2*height / 16), 6 * height / 16)
+    antenna21 = Point((width/2)+(height/32), height / 4)
+    antenna22 = Point((width / 2) + (2*height / 32), (height / 4)-(2*height / 32))
 
-    antenna11.draw(win)
-    # ant1 = Line(antenna11, antenna12)
-    # ant2 = Line(antenna21, antenna22)
-    # ant1.draw(win)
-    # ant2.draw(win)
-
-def drawArm(win, width, height, side):
-    shoulder = Point(width/2, height*7/16)
-    if side == 'left':
-        hand = Point(width/3, height/2)
-    else:
-        hand = Point(width*2/3, height/2)
-    arm = Line(shoulder, hand)
-    arm.draw(win)
-
-def drawLeg(win, width, height, side):
-    bottomBody = Point(width/2, height/2)
-    if side == 'left':
-        foot = Point(width/3, height*5/8)
-    else:
-        foot = Point(width*2/3, height*5/8)
-    leg = Line(bottomBody, foot)
-    leg.draw(win)
+    ant1 = Line(antenna11, antenna12)
+    ant2 = Line(antenna21, antenna22)
+    ant1.draw(win)
+    ant2.draw(win)
 
 def drawHangman(lives, win, width, height):
 
@@ -179,8 +151,6 @@ def drawHangman(lives, win, width, height):
         drawLegs(win, width, height)
     elif lives == 1:
         drawAntennas(win, width, height)
-
-
 
 def task1c():
     height = 500
