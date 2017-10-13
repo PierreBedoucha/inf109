@@ -26,7 +26,7 @@ def checkHit(secretWord, secretList, s):
 def showScreen(secretList):
     height = 500
     width = 250
-    win = GraphWin("The Antman", width, height)
+    win = GraphWin("The Hangman", width, height)
     middleOfWord = Point(width/2, height/2)
     word = Text(middleOfWord, secretList)
     word.draw(win)
@@ -137,7 +137,32 @@ def drawAntennas(win, width, height):
     ant1.draw(win)
     ant2.draw(win)
 
-def drawTheAntman(lives, win, width, height):
+def drawHangmanLetters(textList, lives, win):
+    if textList:
+        [i.undraw() for i in textList]
+
+    hangmanPoint = Point(win.width / 2, win.height* 8/10)
+    hangmanText = Text(hangmanPoint, 'The Hangman: ')
+    hangmanText.setSize(22)
+    hangmanText.setTextColor('red')
+    if lives == 7:
+        hangmanText.setText('The Hangman: H')
+    if lives == 6:
+        hangmanText.setText('The Hangman: HA')
+    elif lives == 5:
+        hangmanText.setText('The Hangman: HAN')
+    elif lives == 4:
+        hangmanText.setText('The Hangman: HANG')
+    elif lives == 3:
+        hangmanText.setText('The Hangman: HANGM')
+    elif lives == 2:
+        hangmanText.setText('The Hangman: HANGMA')
+    elif lives == 1:
+        hangmanText.setText('The Hangman: HANGMAN')
+    hangmanText.draw(win)
+    textList.append(hangmanText)
+
+def drawTheHangman(lives, win, width, height):
 
     if lives == 6:
         drawBottom(win, width, height)
@@ -155,26 +180,30 @@ def drawTheAntman(lives, win, width, height):
 def task1c():
     height = 500
     width = 250
-    win = GraphWin("The Antman", width, height)
+    win = GraphWin("The Hangman", width, height)
     lives = 10
     while lives > 0:
         win.getKey()
-        drawTheAntman(lives, win, width, height)
+        drawTheHangman(lives, win, width, height)
         lives -= 1
     win.getMouse()
     win.close()
 
 def play(secretWord):
     secretList = makeCopy(secretWord)
-    lives = 6
+    lives = 7
     countHits = 0
-    height = 500
-    width = 250
-    win = GraphWin("The Antman", width, height)
-    middleOfWord = Point(width/2, height*7/8)
+    height = 600
+    width = 400
+    win = GraphWin("The Hungman", width, height)
+    name = intro(win)
+
+    middleLine = Line(Point(0, height/2), Point(width, height/2))
+    middleLine.draw(win)
+    middleOfWord = Point(width/2, height*9/10)
     word = Text(middleOfWord, secretList)
     word.draw(win)
-    textPoint = Point(width/2, height/16)
+    textPoint = Point(width/2, 3*height/5)
     displayText = {'start':'Guess a letter.',
                    'good':'Well done, guess again.',
                    'bad':'Not in word, guess again.',
@@ -185,7 +214,8 @@ def play(secretWord):
     theText.draw(win)
 
     letter_list = []
-    alreadyPoint = Point(width / 2, height / 10)
+    textList = []
+    alreadyPoint = Point(width / 2, height* 7/10)
     alreadyText = Text(alreadyPoint, 'Letters already tried: ')
     alreadyText.draw(win)
 
@@ -197,12 +227,12 @@ def play(secretWord):
             letter_list.append(letter)
             theText.setText(displayText['bad'])
             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
-            drawTheAntman(lives, win, width, height)
+            drawHangmanLetters(textList, lives, win)
             lives = lives - 1
         elif hit == 0 and letter in letter_list:
             theText.setText(displayText['already'])
             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
-            drawTheAntman(lives, win, width, height)
+            drawHangmanLetters(textList, lives, win)
             lives = lives - 1
         else:
             letter_list.append(letter)
@@ -241,6 +271,31 @@ def endGame(win, width, height):
             elif clickPoint.getX() > width/2:
                 # not play again
                 return True
+
+
+def intro(win):
+    '''add a starting page'''
+    # win.setCoords(0, 0, 600, 400)
+    text1 = Text(Point(win.width/2, win.height/6),
+                 "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
+    text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
+    text3 = Text(Point(win.width/2, win.height/2),
+                 "Enter your Player name and click anywhere else to start.")
+    text1.draw(win)
+    text2.draw(win)
+    text3.draw(win)
+    # How many times do you want to play
+    playername = Entry(Point(win.width/2, win.height-100), 15)
+    playername.setText("Your name")
+    playername.draw(win)
+    win.getMouse()
+    name = playername.getText()
+    text1.undraw()
+    text2.undraw()
+    text3.undraw()
+    playername.undraw()
+
+    return name
 
 def main():
     filename = "words.txt"
