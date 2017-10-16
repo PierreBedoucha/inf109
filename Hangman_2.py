@@ -189,6 +189,124 @@ def task1c():
     win.getMouse()
     win.close()
 
+def player_select(win):
+    player_text = Text(Point(win.width/4, win.height*15/16), 'Single player or multiplayer?')
+    singleBox = Rectangle(Point(win.width/2, win.height*29/32), Point(win.width*3/4, win.height*31/32))
+    multiBox = Rectangle(Point(win.width*3/4, win.height*29/32), Point(win.width, win.height*31/32))
+    singleText = Text(Point(win.width*5/8, win.height*15/16), 'Single')
+    multiText = Text(Point(win.width*7/8, win.height*15/16), 'Multi')
+    singleBox.setFill('yellow')
+    multiBox.setFill('purple')
+    player_text.draw(win)
+    singleBox.draw(win)
+    singleText.draw(win)
+    multiBox.draw(win)
+    multiText.draw(win)
+    while True:
+        clickPoint = win.getMouse()
+        if clickPoint.getY() > win.height*29/32:
+            if clickPoint.getX() > win.width*3/4:
+                # play again
+                return False
+            elif clickPoint.getX() > win.width/2:
+                # not play again
+                return True
+
+def intro(win):
+    '''add a starting page'''
+    # win.setCoords(0, 0, 600, 400)
+    text1 = Text(Point(win.width/2, win.height/6),
+                 "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
+    text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
+    text3 = Text(Point(win.width/2, win.height/2),
+                 "Choose your game mode and enter your player name(s).\n"
+                 "After carefullt entering your player name(s), click anywhere to start")
+    text1.draw(win)
+    text2.draw(win)
+    text3.draw(win)
+
+    player_text = Text(Point(win.width/4, win.height*15/16), 'Single player or multiplayer?')
+    singleBox = Rectangle(Point(win.width/2, win.height*29/32), Point(win.width*3/4, win.height*31/32))
+    multiBox = Rectangle(Point(win.width*3/4, win.height*29/32), Point(win.width, win.height*31/32))
+    singleText = Text(Point(win.width*5/8, win.height*15/16), 'Single')
+    multiText = Text(Point(win.width*7/8, win.height*15/16), 'Multi')
+    singleBox.setFill('yellow')
+    multiBox.setFill('purple')
+    player_text.draw(win)
+    singleBox.draw(win)
+    singleText.draw(win)
+    multiBox.draw(win)
+    multiText.draw(win)
+
+    playername1 = Entry(Point(win.width * 1 / 4, win.height - 100), 15)
+    playername1.setText("Your name")
+    playername2 = Entry(Point(win.width * 3 / 4, win.height - 100), 15)
+    playername2.setText("Your name")
+    name = "DEFAULT"
+    while playername1.getText() == 'Your name' or playername1.getText() and playername2.getText() == 'Your name':
+        clickPoint = win.getMouse()
+        if clickPoint.getY() > win.height*29/32:
+            if clickPoint.getX() > win.width*3/4:
+                # Multiplayer
+                if playername1.canvas:
+                    playername1.undraw()
+                if playername2.canvas:
+                    playername2.undraw()
+                playername1.draw(win)
+                playername2.draw(win)
+
+                name = playername1.getText()
+
+            elif clickPoint.getX() > win.width/2:
+                # Single player
+                if playername1.canvas:
+                    playername1.undraw()
+                if playername2.canvas:
+                    playername2.undraw()
+                playername1.draw(win)
+
+                name = playername1.getText()
+
+    text1.undraw()
+    text2.undraw()
+    text3.undraw()
+    playername1.undraw()
+    playername2.undraw()
+    player_text.undraw()
+    singleBox.undraw()
+    singleText.undraw()
+    multiBox.undraw()
+    multiText.undraw()
+    return name
+
+
+
+
+def player_screen(name_list, score_dict, win, turn_id):
+    if len(name_list) == 1:
+        text1 = Text(Point(win.width/2, win.height/6),
+                 "Welcome {0}, we hope you will not get the Hangman! :)".format(name_list[0]))
+        if score_dict:
+            text2 = Text(Point(win.width/2, win.height/3), "Your current score is: {0}".format(score_dict[name_list[0]]))
+            text2.draw(win)
+        text1.draw(win)
+    if not len(name_list) == 1:
+        text1 = Text(Point(win.width/2, win.height/6),
+                 "Welcome {0} and {1} we hope none of you will get the Hangman! :)".format(name_list[0], name_list[1]))
+        if score_dict:
+            text2 = Text(Point(win.width/2, win.height/3), "{0} current score is: {1}".format(name_list[0], score_dict[name_list[0]]))
+            text3 = Text(Point(win.width / 2, win.height*5/12),
+                         "{0} current score is: {1}".format(name_list[1], score_dict[name_list[1]]))
+            text2.draw(win)
+            text3.draw(win)
+        text4 = Text(Point(win.width/2, win.height*7/12),
+                 "It is {0}'s turn".format(name_list[turn_id]))
+        text4.setFill('blue')
+        text1.draw(win)
+        text4.draw(win)
+
+
+
 def play(secretWord):
     secretList = makeCopy(secretWord)
     lives = 7
@@ -196,7 +314,13 @@ def play(secretWord):
     height = 600
     width = 400
     win = GraphWin("The Hungman", width, height)
-    name = intro(win)
+
+    score_dict = {}
+
+    name_list = intro(win)
+
+    turn_id = 0
+    player_screen(name_list, score_dict, win, turn_id)
 
     middleLine = Line(Point(0, height/2), Point(width, height/2))
     middleLine.draw(win)
@@ -245,16 +369,16 @@ def play(secretWord):
         theText.setText(displayText['win'])
     else:
         theText.setText(displayText['lose'])
-    playAgain = endGame(win, width, height)
+    playAgain = endGame(win)
     win.close()
     return playAgain
 
-def endGame(win, width, height):
-    theEnd = Text(Point(width/4, height*15/16), 'Play again?')
-    yesBox = Rectangle(Point(width/2, height*29/32), Point(width*3/4, height*31/32))
-    noBox = Rectangle(Point(width*3/4, height*29/32), Point(width, height*31/32))
-    yesText = Text(Point(width*5/8, height*15/16), 'Yes')
-    noText = Text(Point(width*7/8, height*15/16), 'No')
+def endGame(win):
+    theEnd = Text(Point(win.width/4, win.height*15/16), 'Play again?')
+    yesBox = Rectangle(Point(win.width/2, win.height*29/32), Point(win.width*3/4, win.height*31/32))
+    noBox = Rectangle(Point(win.width*3/4, win.height*29/32), Point(win.width, win.height*31/32))
+    yesText = Text(Point(win.width*5/8, win.height*15/16), 'Yes')
+    noText = Text(Point(win.width*7/8, win.height*15/16), 'No')
     yesBox.setFill('green')
     noBox.setFill('red')
     theEnd.draw(win)
@@ -264,38 +388,14 @@ def endGame(win, width, height):
     noText.draw(win)
     while True:
         clickPoint = win.getMouse()
-        if clickPoint.getY() > height*29/32:
-            if clickPoint.getX() > width*3/4:
+        if clickPoint.getY() > win.height*29/32:
+            if clickPoint.getX() > win.width*3/4:
                 # play again
                 return False
-            elif clickPoint.getX() > width/2:
+            elif clickPoint.getX() > win.width/2:
                 # not play again
                 return True
 
-
-def intro(win):
-    '''add a starting page'''
-    # win.setCoords(0, 0, 600, 400)
-    text1 = Text(Point(win.width/2, win.height/6),
-                 "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
-    text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
-    text3 = Text(Point(win.width/2, win.height/2),
-                 "Enter your Player name and click anywhere else to start.")
-    text1.draw(win)
-    text2.draw(win)
-    text3.draw(win)
-    # How many times do you want to play
-    playername = Entry(Point(win.width/2, win.height-100), 15)
-    playername.setText("Your name")
-    playername.draw(win)
-    win.getMouse()
-    name = playername.getText()
-    text1.undraw()
-    text2.undraw()
-    text3.undraw()
-    playername.undraw()
-
-    return name
 
 def main():
     filename = "words.txt"
