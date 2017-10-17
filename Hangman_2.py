@@ -181,10 +181,12 @@ def task1c():
     height = 500
     width = 250
     win = GraphWin("The Hangman", width, height)
-    lives = 10
+    lives = 7
+    textList = []
+
     while lives > 0:
         win.getKey()
-        drawTheHangman(lives, win, width, height)
+        drawHangmanLetters(textList, lives, win)
         lives -= 1
     win.getMouse()
     win.close()
@@ -401,4 +403,5 @@ def main():
         score_dict[name_list[1]] += player2_score
 
 
-main()
+# main()
+task1c()
