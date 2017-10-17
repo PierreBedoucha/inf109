@@ -191,7 +191,6 @@ def task1c():
 
 
 def player_screen(name_list, score_dict, win):
-    if len(name_list) == 1:
         text1 = Text(Point(win.width/2, win.height/6),
                  "Welcome {0}, we hope you will not get the Hangman! :)".format(name_list[0]))
         if score_dict:
@@ -200,9 +199,7 @@ def player_screen(name_list, score_dict, win):
         text1.draw(win)
 
 
-def multiplayer_screen(name_list, score_dict, win):
-
-    turn_id=0
+def multiplayer_screen(name_list, score_dict, turn_id, win):
 
     if not len(name_list) == 1:
         text1 = Text(Point(win.width/2, win.height/6),
@@ -220,7 +217,7 @@ def multiplayer_screen(name_list, score_dict, win):
         text4.draw(win)
 
 
-def play(secretWord, score_dict, name_list, win):
+def play(secretWord, score_dict, name_list, turn_id, win):
     secretList = makeCopy(secretWord)
     lives = 7
     countHits = 0
@@ -229,14 +226,12 @@ def play(secretWord, score_dict, name_list, win):
         width = 400
         win = GraphWin("The Hungman", width, height)
 
-
-    # name_list = intro(win)
-    # turn_id = 0
-    # multiplayer_screen(name_list, score_dict, win, turn_id)
     width = win.width
     height = win.height
-    multiplayer_screen(name_list, score_dict, win)
 
+    #To comment on/off for SINGLE/MULTI
+    multiplayer_screen(name_list, score_dict, turn_id, win)
+    # player_screen(name_list, score_dict, win)
 
     middleLine = Line(Point(0, height/2), Point(width, height/2))
     middleLine.draw(win)
@@ -315,7 +310,7 @@ def endGame(win, width, height):
                 return True
 
 
-def intro(win):
+def intro_multiplayer(win):
     '''add a starting page'''
     # win.setCoords(0, 0, 600, 400)
     text1 = Text(Point(win.width/2, win.height/6),
@@ -329,7 +324,6 @@ def intro(win):
     name_list = []
 
     # Players
-
     playername1 = Entry(Point(win.width/2, win.height-100), 15)
     playername1.setText("Name player 1")
     playername1.draw(win)
@@ -348,21 +342,63 @@ def intro(win):
     return name_list
 
 
+def intro_singleplayer(win):
+    '''add a starting page'''
+    # win.setCoords(0, 0, 600, 400)
+    text1 = Text(Point(win.width/2, win.height/6),
+                 "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
+    text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
+    text3 = Text(Point(win.width/2, win.height/2),
+                 "Enter your Player name(s) and click anywhere else to start.")
+    text1.draw(win)
+    text2.draw(win)
+    text3.draw(win)
+    name_list = []
+
+    # Player
+    playername1 = Entry(Point(win.width/2, win.height-100), 15)
+    playername1.setText("Name player 1")
+    playername1.draw(win)
+    win.getMouse()
+    name_list.append(playername1.getText())
+    text1.undraw()
+    text2.undraw()
+    text3.undraw()
+    playername1.undraw()
+
+    return name_list
+
+
 def main():
     filename = "words.txt"
-    keepPlaying = True
-
+    keepPlayer1 = True
 
     height = 600
     width = 400
     win = GraphWin("The Hungman", width, height)
+    turn_id = 0
 
-    name_list = intro(win)
+    #SINGLEPLAYER
+    #To comment while commenting out the following for single/multi
+    # name_list = intro_singleplayer(win)
+    # score_dict = {name_list[0]: 0}
+
+    #MULTIPLAYER
+    keepPlayer2 = True
+    name_list = intro_multiplayer(win)
     score_dict = {name_list[0]: 0, name_list[1]: 0}
 
-    while keepPlaying:
+    while keepPlayer1:
         secretWord = random.choice(loadFile(filename))
-        keepPlaying, player0_score  = play(secretWord, score_dict, name_list, win)
-        score_dict[name_list[0]] += player0_score
+        keepPlayer1, player1_score = play(secretWord, score_dict, name_list, turn_id, win)
+        score_dict[name_list[0]] += player1_score
+
+    #To comment or uncomment for SINGLE/MULTI
+    turn_id = 1
+    while keepPlayer2:
+        secretWord = random.choice(loadFile(filename))
+        keepPlayer2, player2_score = play(secretWord, score_dict, name_list, turn_id, win)
+        score_dict[name_list[1]] += player2_score
+
 
 main()
