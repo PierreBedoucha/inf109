@@ -218,22 +218,15 @@ def multiplayer_screen(name_list, score_dict, turn_id, win):
         text1.draw(win)
         text4.draw(win)
 
-
-def play(secretWord, score_dict, name_list, turn_id, win):
+#TASK1D basic play function to call from main()
+#no return values and only secretWord and win as arguments
+def play(secretWord, win):
     secretList = makeCopy(secretWord)
     lives = 7
     countHits = 0
-    if win.isClosed():
-        height = 600
-        width = 400
-        win = GraphWin("The Hungman", width, height)
 
     width = win.width
     height = win.height
-
-    #To comment on/off for SINGLE/MULTI
-    multiplayer_screen(name_list, score_dict, turn_id, win)
-    # player_screen(name_list, score_dict, win)
 
     middleLine = Line(Point(0, height/2), Point(width, height/2))
     middleLine.draw(win)
@@ -245,47 +238,100 @@ def play(secretWord, score_dict, name_list, turn_id, win):
                    'good':'Well done, guess again.',
                    'bad':'Not in word, guess again.',
                    'win':'You have guessed the word.',
-                   'lose':'You have not guessed the word.',
-                   'already':'You already tried this letter'}
+                   'lose':'You have not guessed the word.',}
     theText = Text(textPoint, displayText['start'])
     theText.draw(win)
 
-    letter_list = []
     textList = []
-    alreadyPoint = Point(width / 2, 9*height/12)
-    alreadyText = Text(alreadyPoint, 'Letters already tried: ')
-    alreadyText.draw(win)
-
     while lives > 0 and countHits < len(secretWord):
         letter = win.getKey()
         secretList, hit = checkHit(secretWord, secretList, letter)
 
-        if hit == 0 and not letter in letter_list:
-            letter_list.append(letter)
+        if hit == 0:
             theText.setText(displayText['bad'])
-            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
-            drawHangmanLetters(textList, lives, win)
-            lives = lives - 1
-        elif hit == 0 and letter in letter_list:
-            theText.setText(displayText['already'])
-            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
             drawHangmanLetters(textList, lives, win)
             lives = lives - 1
         else:
-            letter_list.append(letter)
             theText.setText(displayText['good'])
-            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
             word.setText(secretList)
             countHits = countHits + hit
-
     if lives > 0:
         theText.setText(displayText['win'])
     else:
         theText.setText(displayText['lose'])
-    playAgain = endGame(win, width, height)
+    win.getMouse()
     win.close()
 
-    return playAgain, lives
+
+#from earlier task1d for single/multiplayer
+# def play(secretWord, score_dict, name_list, turn_id, win):
+#     secretList = makeCopy(secretWord)
+#     lives = 7
+#     countHits = 0
+#
+#     if win.isClosed():
+#         height = 600
+#         width = 400
+#         win = GraphWin("The Hungman", width, height)
+#
+#     width = win.width
+#     height = win.height
+#
+#     #To comment on/off for SINGLE/MULTI
+#     multiplayer_screen(name_list, score_dict, turn_id, win)
+#     # player_screen(name_list, score_dict, win)
+#
+#     middleLine = Line(Point(0, height/2), Point(width, height/2))
+#     middleLine.draw(win)
+#     middleOfWord = Point(width/2, height*9/10)
+#     word = Text(middleOfWord, secretList)
+#     word.draw(win)
+#     textPoint = Point(width/2, height* 7/10)
+#     displayText = {'start':'Guess a letter.',
+#                    'good':'Well done, guess again.',
+#                    'bad':'Not in word, guess again.',
+#                    'win':'You have guessed the word.',
+#                    'lose':'You have not guessed the word.',
+#                    'already':'You already tried this letter'}
+#     theText = Text(textPoint, displayText['start'])
+#     theText.draw(win)
+#
+#     letter_list = []
+#     textList = []
+#     alreadyPoint = Point(width / 2, 9*height/12)
+#     alreadyText = Text(alreadyPoint, 'Letters already tried: ')
+#     alreadyText.draw(win)
+#
+#     while lives > 0 and countHits < len(secretWord):
+#         letter = win.getKey()
+#         secretList, hit = checkHit(secretWord, secretList, letter)
+#
+#         if hit == 0 and not letter in letter_list:
+#             letter_list.append(letter)
+#             theText.setText(displayText['bad'])
+#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+#             drawHangmanLetters(textList, lives, win)
+#             lives = lives - 1
+#         elif hit == 0 and letter in letter_list:
+#             theText.setText(displayText['already'])
+#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+#             drawHangmanLetters(textList, lives, win)
+#             lives = lives - 1
+#         else:
+#             letter_list.append(letter)
+#             theText.setText(displayText['good'])
+#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+#             word.setText(secretList)
+#             countHits = countHits + hit
+#
+#     if lives > 0:
+#         theText.setText(displayText['win'])
+#     else:
+#         theText.setText(displayText['lose'])
+#     playAgain = endGame(win, width, height)
+#     win.close()
+#
+#     return playAgain, lives
 
 
 def endGame(win, width, height):
@@ -380,6 +426,14 @@ def main():
     win = GraphWin("The Hungman", width, height)
     turn_id = 0
 
+    #TASK1C: only this part of the code with the needed variables
+    # while lives > 0:
+    #     win.getKey()
+    #     drawHangmanLetters(textList, lives, win)
+    #     lives -= 1
+    # win.getMouse()
+    # win.close()
+
     #SINGLEPLAYER
     #To comment while commenting out the following for single/multi
     # name_list = intro_singleplayer(win)
@@ -404,4 +458,7 @@ def main():
 
 
 # main()
-task1c()
+height = 600
+width = 400
+win = GraphWin("The Hungman", width, height)
+play('something', win)
