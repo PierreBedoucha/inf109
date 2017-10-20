@@ -64,78 +64,6 @@ def askLtr(secretWord, secretList):
     win.getMouse()
     win.close()
 
-def drawBottom(win, width, height):
-    left = width/4
-    right = width - width/4
-    bottom = height - height/4
-    bottomLeft = Point(width/8, height*3/4)
-    bottomRight = Point(width*7/8, height*3/4)
-    bottomBar = Line(bottomLeft,
-                     bottomRight)
-    bottomBar.draw(win)
-
-def drawVerticalTopNoose(win, width, height):
-    bottomLeft = Point(width/8, height*3/4)
-    topLeft = Point(width/8, height/8)
-    verticalBar = Line(bottomLeft,
-                       topLeft)
-    topLeft = Point(width / 8, height / 8)
-    topMiddle = Point(width / 2, height / 8)
-    topBar = Line(topLeft, topMiddle)
-    topBar.draw(win)
-    verticalBar.draw(win)
-
-    left = width/4
-    middle = width/2
-    top = height/4
-    topMiddle = Point(width/2, height/8)
-    endNoose = Point(width/2, height/4)
-    noose = Line(endNoose, topMiddle)
-    noose.draw(win)
-
-def drawHead(win, width, height):
-    head = Circle(Point(width/2, height*5/16), height/16)
-    head.draw(win)
-
-def drawBody(win, width, height):
-    topBody = Point(width/2, height*3/8)
-    bottomBody = Point(width/2, height/2)
-    midBody = Point(width/2, height*7/16)
-
-    body1 = Circle(topBody, height / 32)
-    body2 = Circle(bottomBody, height / 32)
-    body3 = Circle(midBody, height / 32)
-    body1.draw(win)
-    body2.draw(win)
-    body3.draw(win)
-    return topBody, midBody, bottomBody
-
-def drawLegs(win, width, height):
-
-    heights = [height*3/8, height/2, height*7/16]
-    widths = [width/2, width/2, width/2]
-
-    for i in range(3):
-        pointleg1 = Point(widths[i] + height / 32, heights[i])
-        pointleg2 = Point(widths[i] + height / 16, heights[i])
-        pointleg21 = Point(widths[i] - height / 32, heights[i])
-        pointleg22 = Point(widths[i] - height / 16, heights[i])
-        leg1 = Line(pointleg1, pointleg2)
-        leg2 = Line(pointleg21, pointleg22)
-        leg1.draw(win)
-        leg2.draw(win)
-
-def drawAntennas(win, width, height):
-    antenna11 = Point((width/2)-(height/32), height / 4)
-    antenna12 = Point((width / 2) - (2*height / 32), (height / 4)-(height / 32))
-
-    antenna21 = Point((width/2)+(height/32), height / 4)
-    antenna22 = Point((width / 2) + (2*height / 32), (height / 4)-(2*height / 32))
-
-    ant1 = Line(antenna11, antenna12)
-    ant2 = Line(antenna21, antenna22)
-    ant1.draw(win)
-    ant2.draw(win)
 
 def drawHangmanLetters(textList, lives, win):
     if textList:
@@ -162,35 +90,6 @@ def drawHangmanLetters(textList, lives, win):
     hangmanText.draw(win)
     textList.append(hangmanText)
 
-def drawTheHangman(lives, win, width, height):
-
-    if lives == 6:
-        drawBottom(win, width, height)
-    if lives == 5:
-        drawVerticalTopNoose(win, width, height)
-    elif lives == 4:
-        drawHead(win, width, height)
-    elif lives == 3:
-        drawBody(win, width, height)
-    elif lives == 2:
-        drawLegs(win, width, height)
-    elif lives == 1:
-        drawAntennas(win, width, height)
-
-def task1c():
-    height = 500
-    width = 250
-    win = GraphWin("The Hangman", width, height)
-    lives = 7
-    textList = []
-
-    while lives > 0:
-        win.getKey()
-        drawHangmanLetters(textList, lives, win)
-        lives -= 1
-    win.getMouse()
-    win.close()
-
 
 def player_screen(name_list, score_dict, win):
         text1 = Text(Point(win.width/2, win.height/6),
@@ -200,9 +99,8 @@ def player_screen(name_list, score_dict, win):
             text2.draw(win)
         text1.draw(win)
 
-
+#TASK1G
 def multiplayer_screen(name_list, score_dict, turn_id, win):
-
     if not len(name_list) == 1:
         text1 = Text(Point(win.width/2, win.height/6),
                  "Welcome {0} and {1},\n we hope none of you will get the Hangman! :)".format(name_list[0], name_list[1]))
@@ -220,13 +118,75 @@ def multiplayer_screen(name_list, score_dict, turn_id, win):
 
 #TASK1D basic play function to call from main()
 #no return values and only secretWord and win as arguments
-def play(secretWord, win):
+# def play(secretWord, win):
+#     secretList = makeCopy(secretWord)
+#     lives = 7
+#     countHits = 0
+#
+#     '''Add fr window manageent on TASK1E'''
+#     if win.isClosed():
+#         height = 600
+#         width = 400
+#         win = GraphWin("The Hungman", width, height)
+#
+#     width = win.width
+#     height = win.height
+#
+#     middleLine = Line(Point(0, height/2), Point(width, height/2))
+#     middleLine.draw(win)
+#     middleOfWord = Point(width/2, height*9/10)
+#     word = Text(middleOfWord, secretList)
+#     word.draw(win)
+#     textPoint = Point(width/2, height* 7/10)
+#     displayText = {'start':'Guess a letter.',
+#                    'good':'Well done, guess again.',
+#                    'bad':'Not in word, guess again.',
+#                    'win':'You have guessed the word.',
+#                    'lose':'You have not guessed the word.',}
+#     theText = Text(textPoint, displayText['start'])
+#     theText.draw(win)
+#
+#     textList = []
+#     while lives > 0 and countHits < len(secretWord):
+#         letter = win.getKey()
+#         secretList, hit = checkHit(secretWord, secretList, letter)
+#
+#         if hit == 0:
+#             theText.setText(displayText['bad'])
+#             drawHangmanLetters(textList, lives, win)
+#             lives = lives - 1
+#         else:
+#             theText.setText(displayText['good'])
+#             word.setText(secretList)
+#             countHits = countHits + hit
+#     if lives > 0:
+#         theText.setText(displayText['win'])
+#     else:
+#         theText.setText(displayText['lose'])
+#     '''To replace win.getMouse() with endGame(win) function for TASK1E'''
+#     # win.getMouse()
+#     playAgain = endGame(win)
+#     win.close()
+#     '''Add playAgain variable return for TASK1E'''
+#     return playAgain
+
+
+#TASK1F SINGLEPLAYER. Enhanced play function for score management.
+def play(secretWord, score_dict, name_list, win):
     secretList = makeCopy(secretWord)
     lives = 7
     countHits = 0
 
+    '''Add fr window manageent on TASK1E'''
+    if win.isClosed():
+        height = 600
+        width = 400
+        win = GraphWin("The Hungman", width, height)
+
     width = win.width
     height = win.height
+
+    player_screen(name_list, score_dict, win)
 
     middleLine = Line(Point(0, height/2), Point(width, height/2))
     middleLine.draw(win)
@@ -259,11 +219,16 @@ def play(secretWord, win):
         theText.setText(displayText['win'])
     else:
         theText.setText(displayText['lose'])
-    win.getMouse()
+    '''To replace win.getMouse() with endGame(win) function for TASK1E'''
+    # win.getMouse()
+    playAgain = endGame(win)
     win.close()
+    '''Add playAgain variable return for TASK1E'''
+    '''Add lives variable as score for TASK1F'''
+    return playAgain, lives
 
 
-#from earlier task1d for single/multiplayer
+#from earlier task1d for: score management, already used letters, and single/multiplayer
 # def play(secretWord, score_dict, name_list, turn_id, win):
 #     secretList = makeCopy(secretWord)
 #     lives = 7
@@ -328,18 +293,18 @@ def play(secretWord, win):
 #         theText.setText(displayText['win'])
 #     else:
 #         theText.setText(displayText['lose'])
-#     playAgain = endGame(win, width, height)
+#     playAgain = endGame(win)
 #     win.close()
 #
 #     return playAgain, lives
 
 
-def endGame(win, width, height):
-    theEnd = Text(Point(width/4, height*15/16), 'Play again?')
-    yesBox = Rectangle(Point(width/2, height*29/32), Point(width*3/4, height*31/32))
-    noBox = Rectangle(Point(width*3/4, height*29/32), Point(width, height*31/32))
-    yesText = Text(Point(width*5/8, height*15/16), 'Yes')
-    noText = Text(Point(width*7/8, height*15/16), 'No')
+def endGame(win):
+    theEnd = Text(Point(win.width/4, win.height*15/16), 'Play again?')
+    yesBox = Rectangle(Point(win.width/2, win.height*29/32), Point(win.width*3/4, win.height*31/32))
+    noBox = Rectangle(Point(win.width*3/4, win.height*29/32), Point(win.width, win.height*31/32))
+    yesText = Text(Point(win.width*5/8, win.height*15/16), 'Yes')
+    noText = Text(Point(win.width*7/8, win.height*15/16), 'No')
     yesBox.setFill('green')
     noBox.setFill('red')
     theEnd.draw(win)
@@ -349,18 +314,17 @@ def endGame(win, width, height):
     noText.draw(win)
     while True:
         clickPoint = win.getMouse()
-        if clickPoint.getY() > height*29/32:
-            if clickPoint.getX() > width*3/4:
+        if clickPoint.getY() > win.height*29/32:
+            if clickPoint.getX() > win.width*3/4:
                 # play again
                 return False
-            elif clickPoint.getX() > width/2:
+            elif clickPoint.getX() > win.width/2:
                 # not play again
                 return True
 
 
 def intro_multiplayer(win):
     '''add a starting page'''
-    # win.setCoords(0, 0, 600, 400)
     text1 = Text(Point(win.width/2, win.height/6),
                  "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
     text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
@@ -392,7 +356,6 @@ def intro_multiplayer(win):
 
 def intro_singleplayer(win):
     '''add a starting page'''
-    # win.setCoords(0, 0, 600, 400)
     text1 = Text(Point(win.width/2, win.height/6),
                  "Info about the game:\nIt's a regular Hangman game.\nTry to guess a secret word letter by letter.")
     text2 = Text(Point(win.width/2, win.height/3), "You have 7 lives until the full word 'HANGMAN' is written on the screen\n Good Luck!")
@@ -434,31 +397,39 @@ def main():
     # win.getMouse()
     # win.close()
 
-    #SINGLEPLAYER
-    #To comment while commenting out the following for single/multi
-    # name_list = intro_singleplayer(win)
-    # score_dict = {name_list[0]: 0}
+    #TASK1D
+    # play('something', win)
 
-    #MULTIPLAYER
-    keepPlayer2 = True
-    name_list = intro_multiplayer(win)
-    score_dict = {name_list[0]: 0, name_list[1]: 0}
+    #TASK1E
+    # while keepPlayer1:
+    #     secretWord = random.choice(loadFile(filename))
+    #     keepPlayer1 = play(secretWord, win)
 
+    #TASK1F: SINGLE PLAYER with score management
+    name_list = intro_singleplayer(win)
+    score_dict = {name_list[0]: 0}
+
+    #MULTIPLAYER with score management
+    # keepPlayer2 = True
+    # name_list = intro_multiplayer(win)
+    # score_dict = {name_list[0]: 0, name_list[1]: 0}
+
+    #TASK1F: only this loop for SINGLE PLAYER with score management
     while keepPlayer1:
         secretWord = random.choice(loadFile(filename))
-        keepPlayer1, player1_score = play(secretWord, score_dict, name_list, turn_id, win)
+        #Score management
+        keepPlayer1, player1_score = play(secretWord, score_dict, name_list, win)
+        #Score management and already used letters
+        # keepPlayer1, player1_score = play(secretWord, score_dict, name_list, turn_id, win)
         score_dict[name_list[0]] += player1_score
 
     #To comment or uncomment for SINGLE/MULTI
-    turn_id = 1
-    while keepPlayer2:
-        secretWord = random.choice(loadFile(filename))
-        keepPlayer2, player2_score = play(secretWord, score_dict, name_list, turn_id, win)
-        score_dict[name_list[1]] += player2_score
+    # turn_id = 1
+    # while keepPlayer2:
+    #     secretWord = random.choice(loadFile(filename))
+    #     keepPlayer2, player2_score = play(secretWord, score_dict, name_list, turn_id, win)
+    #     score_dict[name_list[1]] += player2_score
 
 
-# main()
-height = 600
-width = 400
-win = GraphWin("The Hungman", width, height)
-play('something', win)
+main()
+
