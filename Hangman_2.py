@@ -1,7 +1,7 @@
 from graphics import *
 import random
 
-'''Task 1A'''
+'''TASK1A'''
 def makeCopy(secretWord):
     secretList = ["_"] * len(secretWord)
     return secretList
@@ -38,6 +38,7 @@ def getWord(secretWord):
     win.getMouse()
     win.close()
 
+'''TASK1B'''
 def askLtr(secretWord, secretList):
     win, width, height = showScreen(secretList)
     middleOfWord = Point(width/2, height/2)
@@ -99,7 +100,7 @@ def player_screen(name_list, score_dict, win):
             text2.draw(win)
         text1.draw(win)
 
-#TASK1G
+'''TASK1H'''
 def multiplayer_screen(name_list, score_dict, turn_id, win):
     if not len(name_list) == 1:
         text1 = Text(Point(win.width/2, win.height/6),
@@ -116,8 +117,8 @@ def multiplayer_screen(name_list, score_dict, turn_id, win):
         text1.draw(win)
         text4.draw(win)
 
-#TASK1D basic play function to call from main()
-#no return values and only secretWord and win as arguments
+'''TASK1D, TASK1E: basic play function to call from main()
+no return values and only secretWord and win as arguments'''
 # def play(secretWord, win):
 #     secretList = makeCopy(secretWord)
 #     lives = 7
@@ -171,69 +172,13 @@ def multiplayer_screen(name_list, score_dict, turn_id, win):
 #     return playAgain
 
 
-#TASK1F SINGLEPLAYER. Enhanced play function for score management.
-def play(secretWord, score_dict, name_list, win):
-    secretList = makeCopy(secretWord)
-    lives = 7
-    countHits = 0
-
-    '''Add fr window manageent on TASK1E'''
-    if win.isClosed():
-        height = 600
-        width = 400
-        win = GraphWin("The Hungman", width, height)
-
-    width = win.width
-    height = win.height
-
-    player_screen(name_list, score_dict, win)
-
-    middleLine = Line(Point(0, height/2), Point(width, height/2))
-    middleLine.draw(win)
-    middleOfWord = Point(width/2, height*9/10)
-    word = Text(middleOfWord, secretList)
-    word.draw(win)
-    textPoint = Point(width/2, height* 7/10)
-    displayText = {'start':'Guess a letter.',
-                   'good':'Well done, guess again.',
-                   'bad':'Not in word, guess again.',
-                   'win':'You have guessed the word.',
-                   'lose':'You have not guessed the word.',}
-    theText = Text(textPoint, displayText['start'])
-    theText.draw(win)
-
-    textList = []
-    while lives > 0 and countHits < len(secretWord):
-        letter = win.getKey()
-        secretList, hit = checkHit(secretWord, secretList, letter)
-
-        if hit == 0:
-            theText.setText(displayText['bad'])
-            drawHangmanLetters(textList, lives, win)
-            lives = lives - 1
-        else:
-            theText.setText(displayText['good'])
-            word.setText(secretList)
-            countHits = countHits + hit
-    if lives > 0:
-        theText.setText(displayText['win'])
-    else:
-        theText.setText(displayText['lose'])
-    '''To replace win.getMouse() with endGame(win) function for TASK1E'''
-    # win.getMouse()
-    playAgain = endGame(win)
-    win.close()
-    '''Add playAgain variable return for TASK1E'''
-    '''Add lives variable as score for TASK1F'''
-    return playAgain, lives
-
-
-#from earlier task1d for: score management, already used letters, and single/multiplayer
-# def play(secretWord, score_dict, name_list, turn_id, win):
+'''TASK1F SINGLEPLAYER. Enhanced play function for score management.'''
+# def play(secretWord, score_dict, name_list, win):
 #     secretList = makeCopy(secretWord)
 #     lives = 7
 #     countHits = 0
 #
+#     '''Add fr window manageent on TASK1E'''
 #     if win.isClosed():
 #         height = 600
 #         width = 400
@@ -242,9 +187,7 @@ def play(secretWord, score_dict, name_list, win):
 #     width = win.width
 #     height = win.height
 #
-#     #To comment on/off for SINGLE/MULTI
-#     multiplayer_screen(name_list, score_dict, turn_id, win)
-#     # player_screen(name_list, score_dict, win)
+#     player_screen(name_list, score_dict, win)
 #
 #     middleLine = Line(Point(0, height/2), Point(width, height/2))
 #     middleLine.draw(win)
@@ -256,47 +199,106 @@ def play(secretWord, score_dict, name_list, win):
 #                    'good':'Well done, guess again.',
 #                    'bad':'Not in word, guess again.',
 #                    'win':'You have guessed the word.',
-#                    'lose':'You have not guessed the word.',
-#                    'already':'You already tried this letter'}
+#                    'lose':'You have not guessed the word.',}
 #     theText = Text(textPoint, displayText['start'])
 #     theText.draw(win)
 #
-#     letter_list = []
 #     textList = []
-#     alreadyPoint = Point(width / 2, 9*height/12)
-#     alreadyText = Text(alreadyPoint, 'Letters already tried: ')
-#     alreadyText.draw(win)
-#
 #     while lives > 0 and countHits < len(secretWord):
 #         letter = win.getKey()
 #         secretList, hit = checkHit(secretWord, secretList, letter)
 #
-#         if hit == 0 and not letter in letter_list:
-#             letter_list.append(letter)
+#         if hit == 0:
 #             theText.setText(displayText['bad'])
-#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
-#             drawHangmanLetters(textList, lives, win)
-#             lives = lives - 1
-#         elif hit == 0 and letter in letter_list:
-#             theText.setText(displayText['already'])
-#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
 #             drawHangmanLetters(textList, lives, win)
 #             lives = lives - 1
 #         else:
-#             letter_list.append(letter)
 #             theText.setText(displayText['good'])
-#             alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
 #             word.setText(secretList)
 #             countHits = countHits + hit
-#
 #     if lives > 0:
 #         theText.setText(displayText['win'])
 #     else:
 #         theText.setText(displayText['lose'])
+#     '''To replace win.getMouse() with endGame(win) function for TASK1E'''
+#     # win.getMouse()
 #     playAgain = endGame(win)
 #     win.close()
-#
+#     '''Add playAgain variable return for TASK1E'''
+#     '''Add lives variable as score for TASK1F'''
 #     return playAgain, lives
+
+'''TASK1G, TASK1H
+from earlier task1d for: score management, already used letters, and single/multiplayer'''
+def play(secretWord, score_dict, name_list, turn_id, win):
+    secretList = makeCopy(secretWord)
+    lives = 7
+    countHits = 0
+
+    if win.isClosed():
+        height = 600
+        width = 400
+        win = GraphWin("The Hungman", width, height)
+
+    width = win.width
+    height = win.height
+
+    #Here we use the multiplayer screen version
+    multiplayer_screen(name_list, score_dict, turn_id, win)
+
+    middleLine = Line(Point(0, height/2), Point(width, height/2))
+    middleLine.draw(win)
+    middleOfWord = Point(width/2, height*9/10)
+    word = Text(middleOfWord, secretList)
+    word.draw(win)
+    textPoint = Point(width/2, height* 7/10)
+    displayText = {'start':'Guess a letter.',
+                   'good':'Well done, guess again.',
+                   'bad':'Not in word, guess again.',
+                   'win':'You have guessed the word.',
+                   'lose':'You have not guessed the word.',
+                   'already':'You already tried this letter'}
+    theText = Text(textPoint, displayText['start'])
+    theText.draw(win)
+
+    letter_list = []
+    textList = []
+    alreadyPoint = Point(width / 2, 9*height/12)
+    alreadyText = Text(alreadyPoint, 'Letters already tried: ')
+    #TASK1G: un/comment for already used letters
+    alreadyText.draw(win)
+
+    while lives > 0 and countHits < len(secretWord):
+        letter = win.getKey()
+        secretList, hit = checkHit(secretWord, secretList, letter)
+
+        if hit == 0 and not letter in letter_list:
+            letter_list.append(letter)
+            theText.setText(displayText['bad'])
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+            drawHangmanLetters(textList, lives, win)
+            lives = lives - 1
+        elif hit == 0 and letter in letter_list:
+            # TASK1G: un/comment for already used letters
+            theText.setText(displayText['already'])
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+            drawHangmanLetters(textList, lives, win)
+            lives = lives - 1
+        else:
+            letter_list.append(letter)
+            theText.setText(displayText['good'])
+            alreadyText.setText('Letters already tried: {0}'.format(' '.join(str(p) for p in letter_list)))
+            word.setText(secretList)
+            countHits = countHits + hit
+
+    if lives > 0:
+        theText.setText(displayText['win'])
+    else:
+        theText.setText(displayText['lose'])
+    playAgain = endGame(win)
+    win.close()
+
+    return playAgain, lives
 
 
 def endGame(win):
@@ -389,7 +391,7 @@ def main():
     win = GraphWin("The Hungman", width, height)
     turn_id = 0
 
-    #TASK1C: only this part of the code with the needed variables
+    '''TASK1C: only this part of the code with the needed variables'''
     # while lives > 0:
     #     win.getKey()
     #     drawHangmanLetters(textList, lives, win)
@@ -397,38 +399,38 @@ def main():
     # win.getMouse()
     # win.close()
 
-    #TASK1D
+    '''TASK1D'''
     # play('something', win)
 
-    #TASK1E
+    '''TASK1E'''
     # while keepPlayer1:
     #     secretWord = random.choice(loadFile(filename))
     #     keepPlayer1 = play(secretWord, win)
 
-    #TASK1F: SINGLE PLAYER with score management
-    name_list = intro_singleplayer(win)
-    score_dict = {name_list[0]: 0}
+    '''TASK1F: SINGLE PLAYER with score management'''
+    # name_list = intro_singleplayer(win)
+    # score_dict = {name_list[0]: 0}
 
-    #MULTIPLAYER with score management
-    # keepPlayer2 = True
-    # name_list = intro_multiplayer(win)
-    # score_dict = {name_list[0]: 0, name_list[1]: 0}
+    '''TASK1H: MULTIPLAYER with score management'''
+    keepPlayer2 = True
+    name_list = intro_multiplayer(win)
+    score_dict = {name_list[0]: 0, name_list[1]: 0}
 
-    #TASK1F: only this loop for SINGLE PLAYER with score management
+    '''TASK1F: only this loop for SINGLE PLAYER with score management'''
     while keepPlayer1:
         secretWord = random.choice(loadFile(filename))
-        #Score management
-        keepPlayer1, player1_score = play(secretWord, score_dict, name_list, win)
-        #Score management and already used letters
-        # keepPlayer1, player1_score = play(secretWord, score_dict, name_list, turn_id, win)
+        '''Score management only'''
+        # keepPlayer1, player1_score = play(secretWord, score_dict, name_list, win)
+        '''Score management and already used letters'''
+        keepPlayer1, player1_score = play(secretWord, score_dict, name_list, turn_id, win)
         score_dict[name_list[0]] += player1_score
 
-    #To comment or uncomment for SINGLE/MULTI
-    # turn_id = 1
-    # while keepPlayer2:
-    #     secretWord = random.choice(loadFile(filename))
-    #     keepPlayer2, player2_score = play(secretWord, score_dict, name_list, turn_id, win)
-    #     score_dict[name_list[1]] += player2_score
+    '''TASK1H: To comment or uncomment for SINGLE/MULTI'''
+    turn_id = 1
+    while keepPlayer2:
+        secretWord = random.choice(loadFile(filename))
+        keepPlayer2, player2_score = play(secretWord, score_dict, name_list, turn_id, win)
+        score_dict[name_list[1]] += player2_score
 
 
 main()
