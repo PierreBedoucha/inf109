@@ -2,29 +2,35 @@
 Python exercises for inf109 - autumn 2017
 
 ## Assignment 5 
+
 INF109 – Computer Programming for Science 
-•	This is the fifth of X assignments. You can get a total of 15 points for this assignment.  
-•	The submission deadline is Monday, XXXXXXXX, 23.59.  
-•	Please submit your assignment as a single .py file on mitt.uib.no.  
-•	This assignment text is available only in English, but you can of course use Norwegian in your programs.  
-•	The tasks should be submitted individually, i.e. it should be your own work. However some cooperation and discussion is allowed.  
-Hangman  
-You have seen graphics.py to draw some lines and shapes on your screen. To make it a bit more fun, you will program the popular game Hangman for this week’s assignment using the grahpics.py package.  
-In the game Hangman the goal of the player is to correctly guess all the letters in a secret word. The secret word is shown with a row of underscores, which also indicates the number of letters in the word. By suggesting a letter at a time, the player can try to find out which word is hidden behind the underscores. If the player guesses a correct letter, then this letter will be displayed on the screen in all the correct positions in the word. The player wins the game if he has correctly guessed all the letters of the word within at most 7 misses.  
+- This is the fifth of X assignments. You can get a total of 15 points for this assignment.  
+- The submission deadline is Monday, XXXXXXXX, 23.59.  
+- Please submit your assignment as a single .py file on mitt.uib.no.  
+- This assignment text is available only in English, but you can of course use Norwegian in your programs.  
+- The tasks should be submitted individually, i.e. it should be your own work. However some cooperation and discussion is allowed.
+
+## Hangman ##
+
+You have seen graphics.py to draw some lines and shapes on your screen. To make it a bit more fun, you will program the popular game Hangman for this week’s assignment using the grahpics.py package.
+In the game Hangman the goal of the player is to correctly guess all the letters in a secret word. The secret word is shown with a row of underscores, which also indicates the number of letters in the word. By suggesting a letter at a time, the player can try to find out which word is hidden behind the underscores. If the player guesses a correct letter, then this letter will be displayed on the screen in all the correct positions in the word. The player wins the game if he has correctly guessed all the letters of the word within at most 7 misses.
+
 As an example here, the game will start by displaying 
 _ _ _ _ _
-if the secret word is hello.  
+if the secret word is hello.
 If the player types the letter h, he/she gets to see 
 h _ _ _ _
-h and if he then types l, he gets to see 
+and if he then types l, he gets to see 
 h _ l l _
-If after that, he types t or h or l, and then he will still see 
+If after that, he types t or h or l, and then he will still see
 h _ l l _
 
 ## Tasks 
- All tasks are described below and followed each other; you will use functions from previous tasks.  
-Task 1A: Hide the secret word
+- All tasks are described below and followed each other; you will use functions from previous tasks.
+
+### Task 1A: Hide the secret word
 In the game Hangman, our program needs to keep track of which letters of the secret word have been guessed correctly. We need also to be able to display a combination of letters and underscores as described before. For this purpose, a list is useful. Task 1 is to make a Python function makeCopy(secretWord). This function shall take as parameter a string secretWord and it shall return a list secretList that consists of as many ”_” as there are letters in secretWord.
+
 For example, you could do: 
 ```Python
 def makeCopy(secretWord): 
@@ -39,7 +45,7 @@ You can use this example to test if your function works correctly.
 >>> makeCopy(’off’) 
 [’_’, ’_’, ’_’] 
 ```
- secretList will then be displayed as a Text object in a GraphWin object using function showScreen.   
+```secretList``` will then be displayed as a Text object in a GraphWin object using function showScreen.
 ```Python
 def showScreen(secretList): 
     height = 500 width = 250 
@@ -143,10 +149,6 @@ def drawHangmanLetters(textList, lives, win):
 In that snippet of your function the drawing part has been handled. However, you will have to deal with the previous and current state of the object drawn in your GraphWin ‘win’. Write the code needed instead of the commented areas.
 
 
-
-
-
-
 To actually use your function drawHangmanLetters you will call it from another function main(), which will be the ‘dirigent’ of your code along this assignment.
 This function is organized as follows:
 ```Python
@@ -168,11 +170,6 @@ You can use this example to test if your function works correctly.
 ```
 >>> main ()
 ```
-
-The output should be displayed like the following example after two keyboard strokes.
- 
-
-
 
 
 
@@ -246,12 +243,10 @@ def loadFile(filename):
     return secret_word_list
 ```
 
-
 Note that it returns a list for the random.choice method to be used on it. Use random.choice(loadfile(filename)) to access your randomized secretWord.
 
-
-
 When play is finished with a word, we will ask the player whether he wans to continue or quit, drawing pretty boxes on the screen and using the function getMouse(). The program should stop when the player does not want to play anymore. This will be achieved with the provided function endgame(win).
+
 Here is a piece of code for this last bit: 
 
 ```Python
@@ -282,15 +277,7 @@ def endGame(win):
 This function endgame(win) will have to be called from the play(secretWord, win) function to then return the choice of the player in form of a Boolean (False: continue playing, True: stop playing again).
 Once you have linked those two function (endgame and play) correctly you will call the play function in your main() ‘dirigent’ function. This call will be done using a loop and the Boolean keepPlayer1 you initialized at the very beginning of your main() function.
 Be careful, here you will have to manage the opening and closing of the window for each round played by the user. By designing it like this, if the user clicks on ‘Yes’ to play again the previous window will be closed at the end of the play(secretWord, win) function. You will have to test its state and to reopen it if needed.
-Follows an example of the end screen you should obtain to ask the player if he/she wants to play again:
  
-
-
-
-
-
-
-
 
 
 
@@ -330,20 +317,13 @@ It is a very basic function that greets the player and provide an ‘Entry’, g
 It returns an object name_list which is simply a list with the player name.
 Now, as an introduction to the game, in your main() function, you will call this intro_singleplayer(win) function. By doing so, you will obtain a list of player names (only one name for single player).  After obtaining the name, create a dictionary score_dict variable and initialize it with the player name(s) and the current first score (being 0).
 Then, you will create another logical step. You remember in task 1D, we created the playing screen; the first half of it was left blank. You will have to create a function player_screen(name_list, score_dict, win). This function will simply display the following text: 
--	"Welcome {0}, we hope you will not get the Hangman! :)"
--	"Your current score is: {0}"
+- "Welcome {0}, we hope you will not get the Hangman! :)"
+- "Your current score is: {0}"
 Place this text wherever on the first half of the playing window so that it is ergonomic. Also, note that {0} represents a place holder for the variable and will have to be formatted.
 Call this function player_screen from the play function. Be careful of its arguments, since you’re creating them on the ‘upper’ main() function they will have to be passed down through the play function. Modify your play function accordingly.
 You want to be able to follow the player’s score using your freshly created score_dict. Modify your play function so that it returns 2 variables; both playAgain and lives. lives variable will be the score of the player. Then, take the loop you created in your main() function in task 1E and slightly modify it so that it still deals with keepPlayer1 boolean and another variable player1_score that will contain the score of the player after each round and will be store correctly in score_dict. By doing so, score_dcict used in your player_screen function will display and update the player’s score after each round.
 
-
-
-
-
-
-
-You can test out your full player one experience by calling your main function like always. It should give you the following screens:
-   
+You can test out your full player one experience by calling your main function like always. 
 
 ## Supplementary or alternative tasks:
 ### Task 1G: Already used letters
@@ -358,8 +338,6 @@ Then, still in the play function you will add the following text:
 
 In your playing loop you will have to manage a list of already used letters and display at anytime the letters the player has already used. Also, if the player hit an already used letter, your game will display the alreadyText message.
 The bottom part of your screen shall look like the following when hitting twice the letter ‘o’. Note That in this game version, the Hangman goes on when the player hits an already used letter.
- 
-
 
 ### Task 1H: Multiplayer
 The multiplayer will be designed as follows: The 2 players input their names on the multiplayer introduction screen. Then, the first player plays the hangman rounds as long as he pleases. Once the first player is done it is the second player’s turn to play his turns. At anytime, the scores and turns are displayed for the players on the top part of the screen.
@@ -370,11 +348,6 @@ As often, this later task is also about wrapping up everything and putting up fu
 Place this text wherever on the first half of the playing window so that it is ergonomic. Also, note that {0} or {1} represent a placeholder for the variables and will have to be formatted.
 To be able to indicate the current player’s turn, you will have to add another variable, turn_id, as function argument. The variable turn_id will be manage in the main function, passed to the play function and finally reach the player_screen function you modified for player scores and turns display.
 Taken the previous explanation into account, modify yours principal functions main() and play() to manage 2 players hangman game.
-By calling your main() function you should obtain a result similar to the following:
-   
- 
-
-
 
 
 ## Submission 
